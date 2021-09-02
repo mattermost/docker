@@ -12,7 +12,7 @@ services:
     pids_limit: 100
     read_only: true
     tmpfs:
-      - /var/run
+      - /run
       - /var/cache
       - /var/log/nginx
     volumes:
@@ -23,7 +23,7 @@ services:
       - shared-webroot:/usr/share/nginx/html
     environment:
       # timezone inside container
-      - TZ
+      - ${TZ}
     ports:
       - ${HTTPS_PORT}:443
       - ${HTTP_PORT}:80
