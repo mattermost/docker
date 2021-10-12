@@ -45,7 +45,7 @@ services:
       - ${MATTERMOST_CLIENT_PLUGINS_PATH}:/mattermost/client/plugins:rw
     environment:
       # timezone inside container
-      - "TZ: ${TZ}"
+      - "TZ:${TZ}"
 
       # necessary Mattermost options/variables (see env.example)
       - MM_SQLSETTINGS_DRIVERNAME
