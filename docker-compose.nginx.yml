@@ -12,7 +12,7 @@ services:
     pids_limit: 100
     read_only: true
     tmpfs:
-      - /var/run
+      - /run
       - /var/cache
       - /var/log/nginx
     volumes:
