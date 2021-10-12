@@ -13,7 +13,7 @@ services:
     read_only: true
     tmpfs:
       - /tmp
-      - /var/run/postgresql
+      - /run/postgresql
     volumes:
       - ${POSTGRES_DATA_PATH}:/var/lib/postgresql/data
     environment:
