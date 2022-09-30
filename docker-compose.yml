@@ -31,7 +31,10 @@ services:
     restart: ${RESTART_POLICY}
     security_opt:
       - no-new-privileges:true
-    pids_limit: 200
+    pids_limit: 500
+    mem_reservation: 2G
+    mem_limit: 8G
+    memswap_limit: 2G
     read_only: ${MATTERMOST_CONTAINER_READONLY}
     tmpfs:
       - /tmp
