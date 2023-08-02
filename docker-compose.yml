@@ -6,8 +6,6 @@ services:
   postgres:
     image: postgres:${POSTGRES_IMAGE_TAG}
     restart: ${RESTART_POLICY}
-    security_opt:
-      - no-new-privileges:true
     pids_limit: 100
     read_only: true
     tmpfs:
@@ -29,8 +27,6 @@ services:
       - postgres
     image: mattermost/${MATTERMOST_IMAGE}:${MATTERMOST_IMAGE_TAG}
     restart: ${RESTART_POLICY}
-    security_opt:
-      - no-new-privileges:true
     pids_limit: 200
     read_only: ${MATTERMOST_CONTAINER_READONLY}
     tmpfs:
