@@ -2,3 +2,5 @@ volumes
 data
 certs
 .env
+docker-compose.override.yml
+docker-compose.override.yaml
