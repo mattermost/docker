@@ -1,0 +1,71 @@
+version: api.keploy.io/v1beta1
+kind: Http
+name: test-46
+spec:
+    metadata: {}
+    req:
+        method: GET
+        proto_major: 1
+        proto_minor: 1
+        url: http://localhost:8065/api/v4/websocket?connection_id=&sequence_number=0
+        url_params:
+            connection_id: ""
+            sequence_number: "0"
+        header:
+            Accept-Encoding: gzip, deflate, br
+            Accept-Language: en-US,en;q=0.9
+            Cache-Control: no-cache
+            Connection: Upgrade
+            Cookie: rl_page_init_referrer=RudderEncrypt%3AU2FsdGVkX1%2BidFc1X9FohYbzr9TJ%2F797cNyL2J1HTlc%3D; rl_page_init_referring_domain=RudderEncrypt%3AU2FsdGVkX1%2FMFaSvybIxCRvBgmrub9Kb5wE%2FhuZzLSc%3D; __stripe_mid=764f6db5-f24a-4338-9e8d-5ed6304dbeffb73ddc; MMAUTHTOKEN=u8a5aizbf3yj3xc7xu1q1q698h; MMUSERID=ys39xtsrzibu7x66aeiae4ze7a; MMCSRF=e9exguakwpngdfyb7twejwkhoc; __stripe_sid=83587178-27fe-4178-ac3f-bd6e6b24b33d42fa85; rl_anonymous_id=RudderEncrypt%3AU2FsdGVkX19ecndCONnc9VumVbuHOlVdYFkllnDkzDMXEg%2FYrBZSHaccJOBmzoAsQBEcyeCf6Z8ZoZWNH5t%2Fqw%3D%3D; rl_group_id=RudderEncrypt%3AU2FsdGVkX19Q6xSRvnQ%2BEKrz%2FQ4HPPZR3BwuyCSJ0ew%3D; rl_group_trait=RudderEncrypt%3AU2FsdGVkX1%2B%2BEzhwMyLiaC2P308TzTRnjd1CzIfQSEM%3D; rl_user_id=RudderEncrypt%3AU2FsdGVkX19QT9dnOBEIhEHwJJL0Hb7VY%2BhI45Dgj4YGCZBqmI8jtveWN9C%2ByTLF; rl_trait=RudderEncrypt%3AU2FsdGVkX18%2BgcdGzc3s5yHCdgdVPq7cIGDoBxTaoU8%3D
+            Host: localhost:8065
+            Origin: http://localhost:8065
+            Pragma: no-cache
+            Sec-Websocket-Extensions: permessage-deflate; client_max_window_bits
+            Sec-Websocket-Key: XmTIuG4ItidtoiwK3TincQ==
+            Sec-Websocket-Version: "13"
+            Upgrade: websocket
+            User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+        body: ""
+        timestamp: 2024-03-22T12:54:46.705345505Z
+    resp:
+        status_code: 403
+        header:
+            Content-Length: "191"
+            Content-Type: text/plain; charset=utf-8
+            Date: Fri, 22 Mar 2024 12:54:46 GMT
+            Expires: "0"
+            Permissions-Policy: ""
+            Referrer-Policy: no-referrer
+            Sec-Websocket-Version: "13"
+            Vary: Accept-Encoding
+            X-Content-Type-Options: nosniff
+            X-Request-Id: axdrrrakzpnmjmo8mne7uqu5aa
+            X-Version-Id: 9.5.2.8115857622.09e35101703738e85bee6f7091163f71.false
+        body: |-
+            Forbidden
+            {"id":"api.web_socket.connect.upgrade.app_error","message":"Failed to upgrade websocket connection.","detailed_error":"","request_id":"axdrrrakzpnmjmo8mne7uqu5aa","status_code":400}
+        status_message: Forbidden
+        proto_major: 0
+        proto_minor: 0
+        timestamp: 2024-03-22T12:54:48.747290507Z
+    objects: []
+    assertions:
+        noise:
+            header.Date: []
+    created: 1711112088
+curl: |
+    curl --request GET \
+      --url http://localhost:8065/api/v4/websocket?connection_id=&sequence_number=0 \
+      --header 'Sec-Websocket-Extensions: permessage-deflate; client_max_window_bits' \
+      --header 'Sec-Websocket-Version: 13' \
+      --header 'Host: localhost:8065' \
+      --header 'Accept-Encoding: gzip, deflate, br' \
+      --header 'Pragma: no-cache' \
+      --header 'Cookie: rl_page_init_referrer=RudderEncrypt%3AU2FsdGVkX1%2BidFc1X9FohYbzr9TJ%2F797cNyL2J1HTlc%3D; rl_page_init_referring_domain=RudderEncrypt%3AU2FsdGVkX1%2FMFaSvybIxCRvBgmrub9Kb5wE%2FhuZzLSc%3D; __stripe_mid=764f6db5-f24a-4338-9e8d-5ed6304dbeffb73ddc; MMAUTHTOKEN=u8a5aizbf3yj3xc7xu1q1q698h; MMUSERID=ys39xtsrzibu7x66aeiae4ze7a; MMCSRF=e9exguakwpngdfyb7twejwkhoc; __stripe_sid=83587178-27fe-4178-ac3f-bd6e6b24b33d42fa85; rl_anonymous_id=RudderEncrypt%3AU2FsdGVkX19ecndCONnc9VumVbuHOlVdYFkllnDkzDMXEg%2FYrBZSHaccJOBmzoAsQBEcyeCf6Z8ZoZWNH5t%2Fqw%3D%3D; rl_group_id=RudderEncrypt%3AU2FsdGVkX19Q6xSRvnQ%2BEKrz%2FQ4HPPZR3BwuyCSJ0ew%3D; rl_group_trait=RudderEncrypt%3AU2FsdGVkX1%2B%2BEzhwMyLiaC2P308TzTRnjd1CzIfQSEM%3D; rl_user_id=RudderEncrypt%3AU2FsdGVkX19QT9dnOBEIhEHwJJL0Hb7VY%2BhI45Dgj4YGCZBqmI8jtveWN9C%2ByTLF; rl_trait=RudderEncrypt%3AU2FsdGVkX18%2BgcdGzc3s5yHCdgdVPq7cIGDoBxTaoU8%3D' \
+      --header 'Accept-Language: en-US,en;q=0.9' \
+      --header 'Connection: Upgrade' \
+      --header 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36' \
+      --header 'Cache-Control: no-cache' \
+      --header 'Sec-Websocket-Key: XmTIuG4ItidtoiwK3TincQ==' \
+      --header 'Origin: http://localhost:8065' \
+      --header 'Upgrade: websocket' \
