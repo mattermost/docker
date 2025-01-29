@@ -36,6 +36,10 @@ services:
 
       # additional settings
       - MM_SERVICESETTINGS_SITEURL
+    ports:
+      - ${APP_PORT}:8065
+      - ${CALLS_PORT}:${CALLS_PORT}/udp
+      - ${CALLS_PORT}:${CALLS_PORT}/tcp
 
 # If you use rolling image tags and feel lucky watchtower can automatically pull new images and
 # instantiate containers from it. https://containrrr.dev/watchtower/
