@@ -3,30 +3,7 @@
 version: "2.4"
 
 services:
-  postgres:
-    image: postgres:${POSTGRES_IMAGE_TAG}
-    restart: ${RESTART_POLICY}
-    security_opt:
-      - no-new-privileges:true
-    pids_limit: 100
-    read_only: true
-    tmpfs:
-      - /tmp
-      - /var/run/postgresql
-    volumes:
-      - ${POSTGRES_DATA_PATH}:/var/lib/postgresql/data
-    environment:
-      # timezone inside container
-      - TZ
-
-      # necessary Postgres options/variables
-      - POSTGRES_USER
-      - POSTGRES_PASSWORD
-      - POSTGRES_DB
-
   mattermost:
-    depends_on:
-      - postgres
     image: mattermost/${MATTERMOST_IMAGE}:${MATTERMOST_IMAGE_TAG}
     restart: ${RESTART_POLICY}
     security_opt:
