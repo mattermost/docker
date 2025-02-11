@@ -36,6 +36,7 @@ services:
 
       # additional settings
       - MM_SERVICESETTINGS_SITEURL
+      - MM_SUPPORTSETTINGS_SUPPORTEMAIL
     ports:
       - ${APP_PORT}:8065
       - ${CALLS_PORT}:${CALLS_PORT}/udp
