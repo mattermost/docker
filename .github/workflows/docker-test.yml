@@ -33,10 +33,6 @@ jobs:
           docker ps
           docker compose ps
           
-      - name: Check Mattermost container logs
-        run: |
-          docker compose logs app
-          
       - name: Verify Mattermost API is accessible
         run: |
           curl -f --retry 10 --retry-delay 5 --retry-connrefused http://localhost:8065/api/v4/system/ping || exit 1
