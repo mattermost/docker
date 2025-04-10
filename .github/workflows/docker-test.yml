@@ -1,0 +1,65 @@
+name: Docker Deployment Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-docker-deployment:
+    name: Test Docker Deployment
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        
+      - name: Create required directories
+        run: |
+          mkdir -p ./volumes/app/mattermost/{config,data,logs,plugins,client/plugins,bleve-indexes}
+          sudo chown -R 2000:2000 ./volumes/app/mattermost
+      
+      - name: Setup environment file
+        run: |
+          cp env.example .env
+          sed -i 's/DOMAIN=mm.example.com/DOMAIN=localhost/g' .env
+          
+      - name: Start Mattermost without NGINX
+        run: |
+          docker compose -f docker-compose.yml -f docker-compose.without-nginx.yml up -d
+          
+      - name: Verify containers are running
+        run: |
+          sleep 30
+          docker ps
+          docker compose ps
+          
+      - name: Check Mattermost container logs
+        run: |
+          docker compose logs app
+          
+      - name: Verify Mattermost API is accessible
+        run: |
+          curl -f --retry 10 --retry-delay 5 --retry-connrefused http://localhost:8065/api/v4/system/ping || exit 1
+          
+      - name: Stop containers
+        run: |
+          docker compose down
+          
+      - name: Test with NGINX deployment 
+        run: |
+          docker compose -f docker-compose.yml -f docker-compose.nginx.yml up -d
+          
+      - name: Verify NGINX containers are running
+        run: |
+          sleep 30
+          docker ps
+          docker compose ps
+          
+      - name: Verify NGINX serves Mattermost
+        run: |
+          curl -f --retry 10 --retry-delay 5 --retry-connrefused http://localhost || exit 1
+          
+      - name: Stop all containers
+        run: |
+          docker compose down
+        if: always()
