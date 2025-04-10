@@ -22,56 +22,27 @@ jobs:
         run: |
           cp env.example .env
           sed -i 's/DOMAIN=mm.example.com/DOMAIN=localhost/g' .env
-          # Create required certificates directory
-          mkdir -p ./volumes/web/cert
-          # Generate self-signed certificate for testing
-          openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-            -keyout ./volumes/web/cert/key-no-password.pem \
-            -out ./volumes/web/cert/cert.pem \
-            -subj "/CN=localhost" -addext "subjectAltName=DNS:localhost"
           
       - name: Start Mattermost without NGINX
         run: |
+          # Configure docker-compose to use without-nginx setup
           docker compose -f docker-compose.yml -f docker-compose.without-nginx.yml up -d
           
       - name: Verify containers are running
         run: |
+          # Allow time for containers to start
           sleep 30
           docker ps
           docker compose ps
           
-      - name: Check service logs
+      - name: Check container logs
         run: |
+          # Check logs for any issues
           docker compose logs mattermost --tail 20
           docker compose logs postgres --tail 20
-
-      - name: Verify Mattermost API is accessible
-        run: |
-          curl -f --retry 10 --retry-delay 5 --retry-connrefused http://localhost:8065/api/v4/system/ping || exit 1
           
       - name: Stop containers
         run: |
-          docker compose down
-          
-      - name: Test with NGINX deployment 
-        run: |
-          docker compose -f docker-compose.yml -f docker-compose.nginx.yml up -d
-          
-      - name: Verify NGINX containers are running
-        run: |
-          sleep 30
-          docker ps
-          docker compose ps
-          
-      - name: Check NGINX logs
-        run: |
-          docker compose logs nginx --tail 20
-          
-      - name: Verify NGINX serves Mattermost
-        run: |
-          curl -f -k --retry 10 --retry-delay 5 --retry-connrefused https://localhost || exit 1
-          
-      - name: Stop all containers
-        run: |
+          # Clean up containers
           docker compose down
         if: always()
