@@ -41,6 +41,11 @@ jobs:
           docker compose logs mattermost --tail 20
           docker compose logs postgres --tail 20
           
+      - name: Verify Mattermost API is accessible
+        run: |
+          # Check that API is responding
+          curl -f --retry 10 --retry-delay 5 --retry-connrefused http://localhost:8065/api/v4/system/ping || exit 1
+          
       - name: Stop containers
         run: |
           # Clean up containers
