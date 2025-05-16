@@ -1,0 +1,74 @@
+name: Docker Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate-compose-files:
+    name: Validate Docker Compose Files
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup environment file
+        run: |
+          cp env.example .env
+
+      - name: Validate base docker-compose file
+        run: docker compose config
+
+      - name: Validate docker-compose with NGINX
+        run: |
+          docker compose -f docker-compose.yml -f docker-compose.nginx.yml config
+
+      - name: Validate docker-compose without NGINX
+        run: docker compose -f docker-compose.yml -f docker-compose.without-nginx.yml config
+
+  test-docker-deployment:
+    name: Test Docker Deployment
+    runs-on: ubuntu-latest
+    needs: validate-compose-files
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Create required directories
+        run: |
+          mkdir -p ./volumes/app/mattermost/{config,data,logs,plugins,client/plugins,bleve-indexes}
+          sudo chown -R 2000:2000 ./volumes/app/mattermost
+
+      - name: Setup environment file
+        run: |
+          cp env.example .env
+          sed -i 's/DOMAIN=mm.example.com/DOMAIN=localhost/g' .env
+
+      - name: Start Mattermost without NGINX
+        run: |
+          # Configure docker-compose to use without-nginx setup
+          docker compose -f docker-compose.yml -f docker-compose.without-nginx.yml up -d
+
+      - name: Verify containers are running
+        run: |
+          # Allow time for containers to start
+          sleep 30
+          docker ps
+          docker compose ps
+
+      - name: Check container logs
+        run: |
+          # Check logs for any issues
+          docker compose logs mattermost --tail 20
+          docker compose logs postgres --tail 20
+
+      - name: Verify Mattermost API is accessible
+        run: |
+          # Check that API is responding
+          curl -f --retry 10 --retry-delay 5 --retry-connrefused http://localhost:8065/api/v4/system/ping || exit 1
+
+      - name: Stop containers
+        run: |
+          # Clean up containers
+          docker compose down
+        if: always()
