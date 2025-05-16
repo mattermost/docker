@@ -103,7 +103,7 @@ fi
 
 if [[ $POSTGRES_UPGRADE_LINE == "" ]]; then
   echo "no exported POSTGRES_UPGRADE_LINE environment variable found"
-  echo "setting POSTGRES_UPGRADE_LINE to default $POSTGRES_OLD_VERSION-to-$POSTGRES_POSTGRES_NEW_VERSION"
+  echo "setting POSTGRES_UPGRADE_LINE to default $POSTGRES_OLD_VERSION-to-$POSTGRES_NEW_VERSION"
   echo "the POSTGRES_UPGRADE_LINE needs to match a folder found here - https://github.com/tianon/docker-postgres-upgrade"
   echo "it should read 'old-to-new'"
   POSTGRES_UPGRADE_LINE=$POSTGRES_OLD_VERSION-to-$POSTGRES_NEW_VERSION # i.e. '9.4-to-13'
@@ -164,7 +164,7 @@ cp -ra "$PATH_TO_MATTERMOST_DOCKER"/volumes/db/ "$PATH_TO_MATTERMOST_DOCKER"/bac
 mkdir "$PATH_TO_MATTERMOST_DOCKER"/volumes/db/"$POSTGRES_OLD_VERSION"
 mv "$PATH_TO_MATTERMOST_DOCKER"/volumes/db/var/lib/postgresql/data/ "$PATH_TO_MATTERMOST_DOCKER"/volumes/db/"$POSTGRES_OLD_VERSION"
 rm -rf "$PATH_TO_MATTERMOST_DOCKER"/volumes/db/var
-mkdir -p "$PATH_TO_MATTERMOST_DOCKER"/volumes/db/$POSTGRES_NEW_VERSION/data
+mkdir -p "$PATH_TO_MATTERMOST_DOCKER"/volumes/db/"$POSTGRES_NEW_VERSION"/data
 
 
 sed -i "s/$POSTGRES_OLD_DOCKER_FROM/$POSTGRES_NEW_DOCKER_FROM/" "$PATH_TO_MATTERMOST_DOCKER"/db/Dockerfile
@@ -185,7 +185,7 @@ docker run --rm \
     tianon/postgres-upgrade:"$POSTGRES_UPGRADE_LINE" \
     --link
 
-cp -p "$PATH_TO_MATTERMOST_DOCKER"/volumes/db/"$POSTGRES_OLD_VERSION"/data/pg_hba.conf "$PATH_TO_MATTERMOST_DOCKER"/volumes/db/$POSTGRES_NEW_VERSION/data/
+cp -p "$PATH_TO_MATTERMOST_DOCKER"/volumes/db/"$POSTGRES_OLD_VERSION"/data/pg_hba.conf "$PATH_TO_MATTERMOST_DOCKER"/volumes/db/"$POSTGRES_NEW_VERSION"/data/
 
 # rebuild the containers
 docker-compose build
