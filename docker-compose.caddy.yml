@@ -1,0 +1,49 @@
+# This Docker Compose file sets up a multi-container application with Caddy and Mattermost services.
+# Version 2.4 of the Docker Compose file format is used.
+
+services:
+
+  # Caddy service configuration
+  caddy:
+    # Specifies that the Caddy service depends on the Mattermost service
+    depends_on:
+      - mattermost
+    # Sets the container name for the Caddy service
+    container_name: caddy-mattermost
+    # Uses the Caddy image with a tag specified by the CADDY_IMAGE_TAG environment variable
+    image: caddy:${CADDY_IMAGE_TAG}
+    # Sets the restart policy for the Caddy container, defined by the RESTART_POLICY environment variable
+    restart: ${RESTART_POLICY}
+    # Security options to disable new privileges
+    security_opt:
+      - no-new-privileges:true
+    # Limits the number of process IDs (PIDs) to 100
+    pids_limit: 100
+    # Sets the container file system to read-only mode
+    read_only: true
+    # Maps host ports to container ports for HTTP and HTTPS traffic
+    ports:
+      - ${HTTPS_PORT}:443
+      - ${HTTP_PORT}:80
+    # Mounts volumes for Caddy data and configuration
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+      - ${CADDY_CONFIG_PATH}:/etc/caddy/Caddyfile:ro
+
+  # Mattermost service configuration
+  mattermost:
+    # Maps host ports to container ports for Mattermost calls (both UDP and TCP)
+    ports:
+      - ${CALLS_PORT}:${CALLS_PORT}/udp
+      - ${CALLS_PORT}:${CALLS_PORT}/tcp
+
+# Defines named volumes for persistent storage of Caddy data and configuration
+volumes:
+  caddy_data:   # Define volume for persistent Caddy config data
+  caddy_config:
+
+# Defines a custom network named 'mattermost' for Let's Encrypt certificate renewal
+networks:
+  default:
+    name: mattermost
