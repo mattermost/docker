@@ -1,4 +1,6 @@
 # Mattermost Docker
+[![ShellCheck](https://github.com/mattermost/docker/actions/workflows/shellcheck.yml/badge.svg)](https://github.com/mattermost/docker/actions/workflows/shellcheck.yml)
+
 The official Docker deployment solution for Mattermost.
 
 ## Install & Usage
