@@ -5,7 +5,7 @@ services:
     restart: ${RESTART_POLICY}
     security_opt:
       - no-new-privileges:true
-    pids_limit: 100
+    pids_limit: 200
     read_only: true
     tmpfs:
       - /tmp
@@ -28,7 +28,7 @@ services:
     restart: ${RESTART_POLICY}
     security_opt:
       - no-new-privileges:true
-    pids_limit: 200
+    pids_limit: 400
     read_only: ${MATTERMOST_CONTAINER_READONLY}
     tmpfs:
       - /tmp
