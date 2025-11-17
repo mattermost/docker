@@ -11,7 +11,7 @@ services:
       - /tmp
       - /var/run/postgresql
     volumes:
-      - ${POSTGRES_DATA_PATH}:/var/lib/postgresql/data
+      - ${POSTGRES_DATA_PATH}:/var/lib/postgresql
     environment:
       # timezone inside container
       - TZ
