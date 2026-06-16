@@ -30,6 +30,51 @@ services:
       - ${CALLS_PORT}:${CALLS_PORT}/udp
       - ${CALLS_PORT}:${CALLS_PORT}/tcp
 
+  certbot-renew:
+    image: certbot/certbot
+    restart: ${RESTART_POLICY}
+    profiles: ["acme"]
+    depends_on:
+      - nginx
+    ## Required to reload nginx via kill -HUP 1
+    pid: "service:nginx"
+    volumes:
+      - ./certs/etc/letsencrypt:/etc/letsencrypt
+      - ./certs/var/lib/letsencrypt:/var/lib/letsencrypt
+      - ./certs/var/log/letsencrypt:/var/log/letsencrypt
+      - shared-webroot:/webroot
+    environment:
+      - DOMAIN=${DOMAIN}
+    entrypoint: |
+      sh -c "
+        while true; do
+          certbot renew --cert-name $DOMAIN --webroot-path /webroot --deploy-hook 'kill -HUP 1';
+          echo 'Sleeping 24h...';
+          sleep 24h;
+        done
+      "
+
+  certbot-init:
+    image: certbot/certbot
+    profiles: ["acme-init"]
+    volumes:
+      - ./certs/etc/letsencrypt:/etc/letsencrypt
+      - ./certs/var/lib/letsencrypt:/var/lib/letsencrypt
+      - ./certs/var/log/letsencrypt:/var/log/letsencrypt
+    environment:
+      - DOMAIN=${DOMAIN}
+      - HTTP_PORT=${HTTP_PORT}
+    ports:
+      - ${HTTP_PORT}:${HTTP_PORT}
+    entrypoint: |
+      sh -c "
+        if [ -d /etc/letsencrypt/live/$DOMAIN ]; then
+          echo 'Certificate already exists for $DOMAIN';
+          exit 0;
+        fi;
+        certbot certonly --standalone --http-01-port $HTTP_PORT -d $DOMAIN --register-unsafely-without-email --agree-tos --non-interactive;
+      "
+
 # Shared volume for Let's Encrypt certificate renewal with a webroot
 volumes:
   shared-webroot:
